@@ -1,6 +1,6 @@
 package com.example.semestralka.data;
 
-import com.example.semestralka.SemestralkaApplication;
+import com.example.semestralka.Application;
 import com.example.semestralka.environment.TestConfiguration;
 import com.example.semestralka.model.Club;
 import com.example.semestralka.model.Event;
@@ -21,7 +21,7 @@ import static com.example.semestralka.environment.Generator.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@ComponentScan(basePackageClasses = SemestralkaApplication.class, excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = TestConfiguration.class)})
+@ComponentScan(basePackageClasses = Application.class, excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, classes = TestConfiguration.class)})
 @AutoConfigureJson
 @ActiveProfiles("test")
 public class EventRepositoryTest {
