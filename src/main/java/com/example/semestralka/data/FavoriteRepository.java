@@ -15,4 +15,6 @@ public interface FavoriteRepository extends CrudRepository<Favorite, FavoriteId>
     List<Favorite> findAllByEventId(Integer event_id);
 
     void deleteAllByEventId(Integer event_id);
+
+    void deleteByEvent(Event event);
 }

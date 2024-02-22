@@ -58,7 +58,7 @@ public class User extends AbstractEntity {
     }
 
     public void removeFavorite(Favorite favorite){
-        favorites.remove(favorite);
+        if (favorites!=null) favorites.remove(favorite);
     }
 
     @JsonIgnore

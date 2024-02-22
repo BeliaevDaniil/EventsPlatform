@@ -46,7 +46,9 @@ public class ClubService {
     @Transactional
     public void save(Club club){
         Objects.requireNonNull(club);
-        clubRepo.save(club);
+        if (!existsByName(club.getName())) {
+            clubRepo.save(club);
+        }
     }
 
     @Transactional
@@ -63,16 +65,18 @@ public class ClubService {
         if (exists(club.getId())) {
             club.getEvents().forEach(event -> event.setAccepted(false));
             club.getEvents().forEach(event -> event.setClub(null));
-
             club.getEvents().forEach(event -> favoriteRepo.deleteAllByEventId(event.getId()));
-
             clubRepo.delete(club);
         }
-
     }
 
     public boolean exists(Integer id){
         Objects.requireNonNull(id);
         return  clubRepo.existsById(id);
+    }
+
+    public boolean existsByName(String name){
+        Objects.requireNonNull(name);
+        return clubRepo.existsByName(name);
     }
 }

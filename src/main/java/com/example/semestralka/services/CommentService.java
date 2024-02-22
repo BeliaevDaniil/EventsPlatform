@@ -70,9 +70,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(Comment comment){
+    public void delete(Comment comment, User user){
         Objects.requireNonNull(comment);
-        if (exists(comment.getId())) {
+        if (exists(comment.getId()) && comment.getUser().equals(user)) {
             comment.getUser().removeComment(comment);
             comment.getEvent().removeComment(comment);
             userRepo.save(comment.getUser());

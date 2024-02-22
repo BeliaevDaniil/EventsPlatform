@@ -41,6 +41,14 @@ public class GenreController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping(value = "/{id}")
+    public void removeGenre(@PathVariable Integer id) {
+        Genre genreToRemove = genreService.find(id);
+        if (genreToRemove==null) throw NotFoundException.create("Genre", id);
+        genreService.delete(genreToRemove);
+    }
+
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Genre getById(@PathVariable Integer id) {
         final Genre genre = genreService.find(id);

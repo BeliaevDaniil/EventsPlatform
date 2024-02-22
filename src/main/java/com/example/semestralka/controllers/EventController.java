@@ -90,7 +90,6 @@ public class EventController {
         final Event eventToRemove = eventService.find(id);
         if (eventToRemove==null) throw NotFoundException.create("Event", id);
         eventService.delete(eventToRemove);
-
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

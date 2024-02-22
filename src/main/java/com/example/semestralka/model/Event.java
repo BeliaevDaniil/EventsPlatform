@@ -31,11 +31,9 @@ public class Event extends AbstractEntity{
     @ManyToMany
     @OrderBy("name")
     @JoinTable(name = "event_genre")
-//    @JsonIgnore
     private List<Genre> genres;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-//    @JsonIgnore
     private List<Comment> comments;
 
     @ManyToOne
@@ -53,8 +51,10 @@ public class Event extends AbstractEntity{
     }
 
     public void removeComment(Comment comment){
-        comments.remove(comment);
+        if (comments != null) comments.remove(comment);
     }
 
-    public void removeGenre(Genre genre){genres.remove(genre);}
+    public void removeGenre(Genre genre){
+        if (genres != null) genres.remove(genre);
+    }
  }

@@ -81,8 +81,10 @@ public class CommentController {
     @DeleteMapping(value = "/{eventId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public void removeByEventIdAndCommentId(@PathVariable Integer eventId,
+    public void removeByEventIdAndCommentId(Authentication auth,
+                                            @PathVariable Integer eventId,
                                             @PathVariable Integer commentId){
+        final User user = ((UserDetails) auth.getPrincipal()).getUser();
         final Event event = eventService.find(eventId);
         if (event == null) {
             throw NotFoundException.create("Event", eventId);
@@ -91,7 +93,7 @@ public class CommentController {
         if (commentToRemove == null || !commentToRemove.getEvent().equals(event)) {
             throw NotFoundException.create("Comment", commentId);
         }
-        commentService.delete(commentToRemove);
+        commentService.delete(commentToRemove, user);
     }
 
     @PutMapping(value = "/{eventId}/comments/{commentId}", consumes = MediaType.APPLICATION_JSON_VALUE)

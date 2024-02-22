@@ -46,7 +46,9 @@ public class GenreService {
     @Transactional
     public void save(Genre genre){
         Objects.requireNonNull(genre);
-        genreRepo.save(genre);
+        if (!existsByName(genre.getName())){
+            genreRepo.save(genre);
+        }
     }
 
     @Transactional
@@ -61,6 +63,10 @@ public class GenreService {
     public void delete(Genre genre){
         Objects.requireNonNull(genre);
         if (exists(genre.getId())) {
+            for (Event event : genre.getEvents()) {
+                event.removeGenre(genre);
+                eventRepo.save(event);
+            }
             genreRepo.delete(genre);
         }
     }
@@ -70,19 +76,28 @@ public class GenreService {
         return  genreRepo.existsById(id);
     }
 
+    public boolean existsByName(String name){
+        Objects.requireNonNull(name);
+        return genreRepo.existsByName(name);
+    }
+
     @Transactional
     public void addEvent(Genre genre, Event event){
         Objects.requireNonNull(genre);
         Objects.requireNonNull(event);
         event.addGenre(genre);
+        genre.addEvent(event);
         eventRepo.save(event);
+        genreRepo.save(genre);
     }
 
     @Transactional
     public void removeEvent(Genre genre, Event event){
         Objects.requireNonNull(genre);
         Objects.requireNonNull(event);
+        genre.removeEvent(event);
         event.removeGenre(genre);
         eventRepo.save(event);
+        genreRepo.save(genre);
     }
 }

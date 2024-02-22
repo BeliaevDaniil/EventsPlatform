@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GenreRepository extends CrudRepository<Genre, Integer> {
     Genre getByName(String name);
+
+    boolean existsByName(String name);
 }

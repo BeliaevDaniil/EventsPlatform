@@ -154,32 +154,28 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
 
         mockMvc.perform(delete("/rest/events/" + event.getId() + "/comments/" + comment.getId()))
                 .andExpect(status().isUnauthorized());
-        verify(commentService, never()).delete(any());
+        verify(commentService, never()).delete(any(),any());
     }
 
-    @WithMockUser(roles = "USER")
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.USER)
     @Test
     public void removeCommentByEventIdAndCommentIdWorksWithAuthorizedUser() throws Exception {
-        user.setRole(Role.USER);
-        Environment.setCurrentUser(user);
         final Event event = Generator.generateUpcomingEvent();
         event.setId(228);
         final Comment comment = Generator.generateComment();
         comment.setId(1337);
         comment.setEvent(event);
-
         when(eventService.find(event.getId())).thenReturn(event);
         when(commentService.find(comment.getId())).thenReturn(comment);
         mockMvc.perform(delete("/rest/events/" + event.getId() + "/comments/" + comment.getId()))
                 .andExpect(status().isNoContent());
-        verify(commentService).delete(comment);
+        final ArgumentCaptor<Comment> captor = ArgumentCaptor.forClass(Comment.class);
+        verify(commentService).delete(captor.capture(),any(User.class));
     }
 
-    @WithMockUser(roles = "ADMIN")
+    @WithCustomMockUser(id = 228, username = "testUsername", role = Role.ADMIN)
     @Test
     public void removeCommentByEventIdAndCommentIdWorksWithAdmin() throws Exception {
-        user.setRole(Role.ADMIN);
-        Environment.setCurrentUser(user);
         final Event event = Generator.generateUpcomingEvent();
         event.setId(228);
         final Comment comment = Generator.generateComment();
@@ -190,7 +186,8 @@ public class CommentControllerSecurityTest extends BaseControllerTestRunner{
         when(commentService.find(comment.getId())).thenReturn(comment);
         mockMvc.perform(delete("/rest/events/" + event.getId() + "/comments/" + comment.getId()))
                 .andExpect(status().isNoContent());
-        verify(commentService).delete(comment);
+        final ArgumentCaptor<Comment> captor = ArgumentCaptor.forClass(Comment.class);
+        verify(commentService).delete(captor.capture(),any(User.class));
     }
 
     @WithAnonymousUser

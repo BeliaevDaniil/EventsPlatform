@@ -1,7 +1,5 @@
 package com.example.semestralka.services;
 
-
-import com.example.semestralka.data.CommentRepository;
 import com.example.semestralka.data.EventRepository;
 import com.example.semestralka.data.UserRepository;
 import com.example.semestralka.environment.Generator;
@@ -28,8 +26,6 @@ public class CommentServiceTest {
     private UserRepository userRepo;
     @Autowired
     private EventRepository eventRepo;
-    @Autowired
-    private CommentRepository commentRepo;
 
     private User user;
     private Comment comment;
@@ -50,7 +46,7 @@ public class CommentServiceTest {
         assertTrue(user.getComments().contains(comment));
         assertTrue(event.getComments().contains(comment));
 
-        commentService.delete(comment);
+        commentService.delete(comment, user);
 
         assertFalse(user.getComments().contains(comment));
         assertFalse(event.getComments().contains(comment));

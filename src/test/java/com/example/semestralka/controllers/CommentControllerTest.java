@@ -209,11 +209,18 @@ public class CommentControllerTest extends BaseControllerTestRunner{
         final Comment comment = Generator.generateComment();
         comment.setId(1337);
         comment.setEvent(event);
+        final User user = Generator.generateUser();
+        user.setId(111);
+        Authentication authMock = mock(Authentication.class);
+        UserDetails userDetailsMock = mock(UserDetails.class);
+        when(authMock.getPrincipal()).thenReturn(userDetailsMock);
+        when(userDetailsMock.getUser()).thenReturn(user);
         when(eventServiceMock.find(event.getId())).thenReturn(event);
         when(commentServiceMock.find(comment.getId())).thenReturn(comment);
-        mockMvc.perform(delete("/rest/events/" + event.getId() + "/comments/" + comment.getId()))
+        mockMvc.perform(delete("/rest/events/" + event.getId() + "/comments/" + comment.getId())
+                    .principal(authMock))
                 .andExpect(status().isNoContent());
-        verify(commentServiceMock).delete(comment);
+        verify(commentServiceMock).delete(comment, user);
     }
 
     @Test
